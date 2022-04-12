@@ -1,11 +1,21 @@
-const parseAsEnv = ({ env, name }) => {
+const parseAsEnv = ({
+    env,
+    name,
+}: Readonly<{
+    env: string | undefined;
+    name: string;
+}>) => {
     if (typeof env === 'string') {
         return env;
     }
     throw new Error(`Expect env of ${name} to be string, got ${env} instead`);
 };
 
-const parseAllEnvAsString = (envs) =>
+const parseAllEnvAsString = (
+    envs: ReadonlyArray<string>
+): Readonly<{
+    [key: string]: string;
+}> =>
     envs
         .map((env) => {
             const name = `process.env.${env}`;
