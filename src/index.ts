@@ -11,7 +11,7 @@ const parseAsEnv = ({
     throw new Error(`Expect env of ${name} to be string, got ${env} instead`);
 };
 
-const parseAllEnvAsString = (
+const parseAsEnvs = (
     envs: ReadonlyArray<string>
 ): Readonly<{
     [key: string]: string;
@@ -34,4 +34,4 @@ const parseAllEnvAsString = (
             {}
         );
 
-export default parseAllEnvAsString;
+export { parseAsEnv, parseAsEnvs };
