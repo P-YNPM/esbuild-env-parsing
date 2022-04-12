@@ -96,6 +96,10 @@ However, before that, I'd like to have a few words about contribution.
 -   Use TypeScript
 -   Write Test Code
 
+### Changes
+
+Kindly refer to [CHANGELOG](https://github.com/P-YNPM/esbuild-env-parsing/blob/main/CHANGELOG.md)
+
 ### How to install
 
 ```sh
