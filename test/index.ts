@@ -1,16 +1,11 @@
-import parseAllEnvAsString from '../src';
+import { parseAsEnvs } from '../src';
 import dotenv from 'dotenv';
 
 describe('Portfolio Data', () => {
     dotenv.config({});
     it('should work because all env is present', () => {
         expect(
-            parseAllEnvAsString([
-                'NODE_ENV',
-                'PUBLIC_URL',
-                'API',
-                'MAPS_API_KEY',
-            ])
+            parseAsEnvs(['NODE_ENV', 'PUBLIC_URL', 'API', 'MAPS_API_KEY'])
         ).toStrictEqual({
             'process.env.API': '"http://localhost:5000"',
             'process.env.MAPS_API_KEY': '"MAPS BOI"',
@@ -20,7 +15,7 @@ describe('Portfolio Data', () => {
     });
     it('should failed because some env is not defined', () => {
         expect(() =>
-            parseAllEnvAsString([
+            parseAsEnvs([
                 'NODE_ENV',
                 'PUBLIC_URL',
                 'API',

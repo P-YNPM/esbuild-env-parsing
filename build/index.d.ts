@@ -1,5 +1,9 @@
-declare const parseAllEnvAsString: (envs: ReadonlyArray<string>) => Readonly<{
+declare const parseAsEnv: ({ env, name, }: Readonly<{
+    env: string | undefined;
+    name: string;
+}>) => string;
+declare const parseAsEnvs: (envs: ReadonlyArray<string>) => Readonly<{
     [key: string]: string;
 }>;
-export default parseAllEnvAsString;
+export { parseAsEnv, parseAsEnvs };
 //# sourceMappingURL=index.d.ts.map

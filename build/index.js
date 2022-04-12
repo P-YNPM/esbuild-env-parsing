@@ -4,7 +4,7 @@ const parseAsEnv = ({ env, name, }) => {
     }
     throw new Error(`Expect env of ${name} to be string, got ${env} instead`);
 };
-const parseAllEnvAsString = (envs) => envs
+const parseAsEnvs = (envs) => envs
     .map((env) => {
     const name = `process.env.${env}`;
     return {
@@ -18,5 +18,5 @@ const parseAllEnvAsString = (envs) => envs
     ...prev,
     ...curr,
 }), {});
-export default parseAllEnvAsString;
+export { parseAsEnv, parseAsEnvs };
 //# sourceMappingURL=index.js.map
