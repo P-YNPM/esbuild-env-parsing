@@ -1,0 +1,13 @@
+{
+    "name": "esbuild-env-parsing",
+    "description": "parse environment variable for esbuild",
+    "version": "0.0.0",
+    "main": "src/index.js",
+    "license": "MIT",
+    "type": "module",
+    "devDependencies": {
+        "dotenv": "^16.0.0",
+        "esbuild": "^0.14.36",
+        "jest": "^27.5.1"
+    }
+}
