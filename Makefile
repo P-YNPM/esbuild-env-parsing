@@ -15,7 +15,7 @@ prebuild:
 	rm -rf build
 
 build: prebuild
-	make transpile && $(NODE_BIN)ts-add-js-extension add --dir=build
+	make transpile
 
 ## test
 test:

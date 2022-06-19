@@ -1,27 +1,27 @@
-import { parseAsEnvs } from '../src';
+import { parseAsBooleanEnv, parseAsEnvs, parseAsNumEnv } from '../src';
 import dotenv from 'dotenv';
 
-describe('Portfolio Data', () => {
+describe('Environment Parser', () => {
     dotenv.config({});
-    it('should work because all env is present', () => {
+    it('should parse subset of env variables that are presented in `env` file', () =>
+        expect(parseAsEnvs(['TRUE_STRING', 'TRUE_BOOL', 'NUM'])).toStrictEqual({
+            'process.env.TRUE_STRING': '"TRUE"',
+            'process.env.TRUE_BOOL': '"true"',
+            'process.env.NUM': '"1"',
+        }));
+    it('should failed because env is not listed in `env` file', () =>
+        expect(() => parseAsEnvs(['I_DONT_EXIST'])).toThrowError());
+    it('should parse env as number', () =>
+        expect(parseAsNumEnv({ name: 'NUM', env: process.env.NUM })).toBe(1));
+    it('should parse env as true', () =>
         expect(
-            parseAsEnvs(['NODE_ENV', 'PUBLIC_URL', 'API', 'MAPS_API_KEY'])
-        ).toStrictEqual({
-            'process.env.API': '"http://localhost:5000"',
-            'process.env.MAPS_API_KEY': '"MAPS BOI"',
-            'process.env.NODE_ENV': '"test"',
-            'process.env.PUBLIC_URL': '"http://localhost:3000"',
-        });
-    });
-    it('should failed because some env is not defined', () => {
-        expect(() =>
-            parseAsEnvs([
-                'NODE_ENV',
-                'PUBLIC_URL',
-                'API',
-                'MAPS_API_KEY',
-                'I_DONT_EXIST',
-            ])
-        ).toThrowError();
-    });
+            parseAsBooleanEnv({ name: 'TRUE_BOOL', env: process.env.TRUE_BOOL })
+        ).toBe(true));
+    it('should parse env as fals', () =>
+        expect(
+            parseAsBooleanEnv({
+                name: 'FALSE_BOOL',
+                env: process.env.FALSE_BOOL,
+            })
+        ).toBe(false));
 });

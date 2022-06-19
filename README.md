@@ -2,6 +2,8 @@
 
 I want something that will throw an error immediately before any environment variable with undefined value can squeeze into my program
 
+So if you have a lot of optional environment variables, this is not for you
+
 I like to use esbuild, although it's possible to do as the following according to this [issue](https://github.com/evanw/esbuild/issues/69)
 
 ```js
@@ -31,37 +33,30 @@ Hence, I built this package
 
 ### How do I use it?
 
-##### CommonJS
-
 ```js
+// CommonJS
 const { build } = require('esbuild');
-require('dotenv').config();
+require('dotenv').config({});
 const { parseAsEnvs } = require('esbuild-env-parsing');
 
-const options = {
-    stdio: 'inherit',
-    entryPoints: ['./src/main.ts'],
-    outfile: './dist/main.js',
-    bundle: true,
-    define: parseAsEnvs(['NODE_ENV', 'WHAT_NOT', 'API', 'APS_API_KEY']),
-};
-
-build(options).catch(() => process.exit(1));
-```
-
-##### ESModule
-
-```js
+// ESModule
 import { build } from 'esbuild';
 import dotenv from 'dotenv';
 const { parseAsEnvs } = require('esbuild-env-parsing');
 
+dotenv.config({});
+
+// this is how you use it for esbuild
 const options = {
     stdio: 'inherit',
     entryPoints: ['./src/main.ts'],
     outfile: './dist/main.js',
     bundle: true,
-    define: parseAsEnvs(['NODE_ENV', 'WHAT_NOT', 'API', 'APS_API_KEY']),
+    // explicit about the variable passed in
+    define: parseAsEnvs(['NODE_ENV', 'WHAT_NOT', 'API']),
+    // or if u rather not be explicit, as it can be exhausting to whitelist environment variables yourself
+    // just throw everything in
+    define: parseAsEnvs(Object.keys(process.env)),
 };
 
 build(options).catch(() => process.exit(1));
@@ -69,20 +64,21 @@ build(options).catch(() => process.exit(1));
 
 ### Can I use it without esbuild
 
-Sort of can, but you will not be able to use `parseAsEnvs`, instead you will be using `parseAsEnv`
+Sort of can, but you will not be able to use `parseAsEnvs`, instead you will be using `parseAsStringEnv`, `parseAsNumEnv` or `parseAsBooleanEnv`
 
 Here's an example
 
 ```js
-import { parseAsEnv } from 'esbuild-env-parsing';
+import { parseAsStringEnv } from 'esbuild-env-parsing';
 
-const apiKey = parseAsEnv({
+// if it has to be boolean or number, use `parseAsBooleanEnv` and `parseAsNumEnv` respectively
+const apiKey = parseAsStringEnv({
     env: process.env.API_KEY,
-    name: 'api',
+    name: 'API_KEY',
 });
 ```
 
-Now you may be wondering why do you need to pass `name`? Well name is something that can help you to identify which environment variable is undefined, because I will throw an error when an environment variable is undefined
+Now you may be wondering why do you need to pass `name`? It's something that can help you to identify which environment variable is missing, because I will throw an error when an environment variable is undefined
 
 ### Can I raise an issue?
 
@@ -110,4 +106,10 @@ OR
 
 ```sh
 npm i esbuild-env-parsing
+```
+
+OR
+
+```sh
+pnpm add esbuild-env-parsing
 ```

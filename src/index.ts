@@ -1,14 +1,43 @@
-const parseAsEnv = ({
-    env,
-    name,
-}: Readonly<{
+type Params = Readonly<{
     env: string | undefined;
     name: string;
-}>) => {
+}>;
+const generateError = (
+    { name, env }: Params,
+    type: 'string' | 'number' | 'boolean'
+) =>
+    new TypeError(
+        `Expect process.env.${name} to be ${type}, got typeof "${typeof env}" with value of "${env}" instead`
+    );
+
+/**
+ * @deprecated Since version 1.1.0. Will be deleted in version 2.0. Use `parseAsStringEnv` instead.
+ */
+const parseAsEnv = (params: Params) => params;
+
+const parseAsStringEnv = ({ env, name }: Params) => {
     if (typeof env === 'string') {
         return env;
     }
-    throw new Error(`Expect env of ${name} to be string, got ${env} instead`);
+    throw generateError({ env, name }, 'string');
+};
+
+const parseAsBooleanEnv = ({ env, name }: Params) => {
+    if (env === 'true') {
+        return true;
+    }
+    if (env === 'false') {
+        return false;
+    }
+    throw generateError({ env, name }, 'boolean');
+};
+
+const parseAsNumEnv = ({ env, name }: Params) => {
+    // @ts-ignore
+    if (env && !isNaN(env)) {
+        return Number(env);
+    }
+    throw generateError({ env, name }, 'number');
 };
 
 const parseAsEnvs = (
@@ -17,15 +46,12 @@ const parseAsEnvs = (
     [key: string]: string;
 }> =>
     envs
-        .map((env) => {
-            const name = `process.env.${env}`;
-            return {
-                [`${name}`]: `"${parseAsEnv({
-                    env: process.env[env],
-                    name,
-                })}"`,
-            };
-        })
+        .map((env) => ({
+            [`process.env.${env}`]: `"${parseAsStringEnv({
+                name: env,
+                env: process.env[env],
+            })}"`,
+        }))
         .reduce(
             (prev, curr) => ({
                 ...prev,
@@ -34,4 +60,10 @@ const parseAsEnvs = (
             {}
         );
 
-export { parseAsEnv, parseAsEnvs };
+export {
+    parseAsEnv,
+    parseAsNumEnv,
+    parseAsBooleanEnv,
+    parseAsStringEnv,
+    parseAsEnvs,
+};
