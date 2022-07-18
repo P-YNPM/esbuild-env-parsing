@@ -1,11 +1,21 @@
 {
     "name": "esbuild-env-parsing",
     "description": "parse environment variable for esbuild or just make sure your environment variable exists as the right data type",
-    "version": "1.0.1",
-    "main": "build/index.js",
-    "types": "build/index.d.ts",
+    "version": "1.0.2",
     "license": "MIT",
-    "type": "module",
+    "main": "build/cjs/index.js",
+    "module": "build/mjs/index.js",
+    "types": "build/dts/index.d.ts",
+    "react-native": "build/mjs/index.js",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "require": "./build/cjs/index.js",
+            "import": "./build/mjs/index.js",
+            "default": "./build/mjs/index.js",
+            "types": "./build/dts/index.d.ts"
+        }
+    },
     "devDependencies": {
         "@types/jest": "^27.4.1",
         "dotenv": "^16.0.0",

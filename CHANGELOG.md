@@ -1,3 +1,7 @@
+## 1.0.2 (19 July 2022)
+
+-   Added support for CommonJs & Emit declaration in separate folder
+
 ## 1.0.1 (19 June 2022)
 
 -   Added parsing for boolean and number
