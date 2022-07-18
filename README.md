@@ -54,9 +54,6 @@ const options = {
     bundle: true,
     // explicit about the variable passed in
     define: parseAsEnvs(['NODE_ENV', 'WHAT_NOT', 'API']),
-    // or if u rather not be explicit, as it can be exhausting to whitelist environment variables yourself
-    // just throw everything in
-    define: parseAsEnvs(Object.keys(process.env)),
 };
 
 build(options).catch(() => process.exit(1));

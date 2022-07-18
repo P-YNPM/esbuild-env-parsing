@@ -1,21 +1,32 @@
 .PHONY: test build
+MAKEFLAGS += --silent
 
 NODE_BIN=node_modules/.bin/
 
-## transpile
-tsc=$(NODE_BIN)tsc
-transpile:
-	$(tsc) -p tsconfig.json $(arguments) 
-
-typecheck:
-	make transpile arguments=--noEmit
+## setup
+install:
+	yarn install --frozen-lockfile
 
 ## build
+tsc=$(NODE_BIN)tsc
+build-dts:
+	$(tsc) -p tsconfig.json $(arguments) 
+
+build-mjs:
+	$(tsc) -p tsconfig.mjs.json $(arguments) 
+
+build-cjs:
+	$(tsc) -p tsconfig.cjs.json $(arguments) 
+
 prebuild:
 	rm -rf build
 
 build: prebuild
-	make transpile
+	make build-dts && make build-mjs && make build-cjs && node script/package.js
+
+## typecheck
+typecheck:
+	make build-dts arguments=--noEmit
 
 ## test
 test:
